@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  draid.db:
+    image: mongo:4.2.0
+    restart: always
+    expose:
+      - 27017
+    networks:
+      - app-network
+    container_name: draid-db
+
+  draid.api:
+    build: .
+    restart: always
+    ports:
+      - ${PORT}:8000
+    environment:
+      PORT: 8000
+      DATABASE_URI: mongodb://draid.db:27017
+      SERVER_HOST: http://localhost:${PORT}
+      SIGNING_STRING: SECRET
+    volumes:
+    - ./credentials:/root/credentials:ro
+    depends_on:
+      - draid.db
+    networks:
+      - app-network
+networks:
+  app-network:

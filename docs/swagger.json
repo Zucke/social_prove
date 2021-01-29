@@ -1,0 +1,2402 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "A social network prove XD",
+    "version": "0.2.0",
+    "title": "social_prove",
+    "contact": {
+      "email": "erickzuria71@gmail.com"
+    },
+    "license": {
+      "name": "CC",
+      "url": ""
+    }
+  },
+  "host": "",
+  "basePath": "",
+  "tags": [
+    {
+      "name": "user",
+      "description": "Operations about user"
+    },
+    {
+      "name": "admin",
+      "description": "Operations about administrator"
+    },
+    {
+      "name": "super",
+      "description": "Operations about super administrator"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Validate user and returns an authorization token.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "user@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "mySecret"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AuthResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Validate google user and returns an authorization token.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AuthResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "AccessToken": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of users.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "all",
+            "in": "query",
+            "description": "Includes unactive users",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetUsersResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Register a new user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/RegisterUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns an user by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetUserResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Update an user by id.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "admin",
+          "super"
+        ],
+        "description": "Delete an user by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/follow": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Add user id to following list.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "description": "Remove user id from following list.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/posts": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of posts.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetPostsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Register a new post.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/RegisterPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a post by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetPostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Update a post by id.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdatePostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Delete a post by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}/like": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Add like to a post by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "description": "Remove like from a post by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/posts/user/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of posts by user id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetPostsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/comments": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of comments.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetCommentsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Register a new comment.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/RegisterCommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommentResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a comment by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetCommentResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Update a comment by id.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateCommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommentResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Delete a comment by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}/like": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "Add like to a comment by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommentResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "description": "Remove like from a comment by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Comment id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommentResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/user/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of comments by user id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetCommentsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/post/{id}": {
+      "get": {
+        "tags": [
+          "user",
+          "admin",
+          "super"
+        ],
+        "description": "Returns a list of comments by post id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Post id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to pagination",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit to pagination",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetCommentsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/ErrorBadRequest"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnauthorized"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInternalServerError"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    },
+    "AccessToken": {
+      "type": "apiKey",
+      "name": "access_token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "ErrorNotFound": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Not Found"
+        }
+      }
+    },
+    "ErrorBadRequest": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Bad resquest"
+        }
+      }
+    },
+    "ErrorUnauthorized": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Unauthorized"
+        }
+      }
+    },
+    "ErrorInternalServerError": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Interal server error"
+        }
+      }
+    },
+    "Location": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "example": 40.77
+      },
+      "example": [
+        -73.97,
+        40.77
+      ]
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "default": ""
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "default": ""
+        },
+        "email": {
+          "type": "string",
+          "example": "me@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "mySecret"
+        },
+        "country": {
+          "type": "string",
+          "example": "colombia"
+        },
+        "state": {
+          "type": "string",
+          "example": "Capital District"
+        },
+        "city": {
+          "type": "string",
+          "example": "Bogota"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string",
+          "format": "url",
+          "example": "http://example.com/me.jpg"
+        },
+        "following": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "followers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "role": {
+          "type": "number",
+          "format": "uint8",
+          "example": 0
+        },
+        "active": {
+          "type": "boolean",
+          "example": false,
+          "default": true
+        },
+        "notification_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "RegisterUserRequest": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "default": ""
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "default": ""
+        },
+        "email": {
+          "type": "string",
+          "example": "me@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "mySecret"
+        }
+      }
+    },
+    "UserResponse": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "default": ""
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "default": ""
+        },
+        "email": {
+          "type": "string",
+          "example": "me@example.com"
+        },
+        "country": {
+          "type": "string",
+          "example": "colombia"
+        },
+        "state": {
+          "type": "string",
+          "example": "Capital District"
+        },
+        "city": {
+          "type": "string",
+          "example": "Bogota"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string",
+          "format": "url",
+          "example": "http://example.com/me.jpg"
+        },
+        "following": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "followers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "notification_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "UpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "default": ""
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "default": ""
+        },
+        "country": {
+          "type": "string",
+          "example": "colombia"
+        },
+        "state": {
+          "type": "string",
+          "example": "Capital District"
+        },
+        "city": {
+          "type": "string",
+          "example": "Bogota"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string",
+          "format": "url",
+          "example": "http://example.com/me.jpg"
+        },
+        "notification_id": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthResponse": {
+      "type": "object",
+      "required": [
+        "token",
+        "user"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "format": "jwt"
+        },
+        "user": {
+          "$ref": "#/definitions/UserResponse"
+        }
+      }
+    },
+    "GetUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserResponse"
+        }
+      }
+    },
+    "GetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserResponse"
+          }
+        },
+        "total": {
+          "type": "number",
+          "format": "uint8"
+        }
+      }
+    },
+    "PostUser": {
+      "type": "object",
+      "required": [
+        "first_name",
+        "id",
+        "last_name",
+        "picture"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "default": ""
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "default": ""
+        },
+        "picture": {
+          "type": "string",
+          "format": "url",
+          "example": "http://example.com/me.jpg"
+        }
+      }
+    },
+    "Post": {
+      "type": "object",
+      "required": [
+        "badge",
+        "id",
+        "pictures",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        },
+        "pictures": {
+          "type": "array",
+          "example": [
+            "http://example.com/cover.jpg",
+            "http://example.com/image.jpg"
+          ],
+          "items": {
+            "type": "string",
+            "example": "http://example.com/cover.jpg"
+          }
+        },
+        "badge": {
+          "type": "string",
+          "example": "10.4 KM"
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "RegisterPostRequest": {
+      "type": "object",
+      "required": [
+        "badge",
+        "pictures",
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        },
+        "pictures": {
+          "type": "array",
+          "example": [
+            "http://example.com/cover.jpg",
+            "http://example.com/image.jpg"
+          ],
+          "items": {
+            "type": "string",
+            "example": "http://example.com/cover.jpg"
+          }
+        },
+        "badge": {
+          "type": "string",
+          "example": "10.4 KM"
+        }
+      }
+    },
+    "PostResponse": {
+      "type": "object",
+      "required": [
+        "badge",
+        "id",
+        "pictures",
+        "user"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "user": {
+          "$ref": "#/definitions/PostUser"
+        },
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        },
+        "pictures": {
+          "type": "array",
+          "example": [
+            "http://example.com/cover.jpg",
+            "http://example.com/image.jpg"
+          ],
+          "items": {
+            "type": "string",
+            "example": "http://example.com/cover.jpg"
+          }
+        },
+        "badge": {
+          "type": "string",
+          "example": "10.4 KM"
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "GetPostResponse": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "$ref": "#/definitions/PostResponse"
+        }
+      }
+    },
+    "GetPostsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostResponse"
+          }
+        },
+        "total": {
+          "type": "number",
+          "format": "uint8"
+        }
+      }
+    },
+    "UpdatePostRequest": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "pictures": {
+          "type": "array",
+          "example": [
+            "http://example.com/cover.jpg",
+            "http://example.com/image.jpg"
+          ],
+          "items": {
+            "type": "string",
+            "example": "http://example.com/cover.jpg"
+          }
+        },
+        "badge": {
+          "type": "string",
+          "example": "10.4 KM"
+        }
+      }
+    },
+    "Comment": {
+      "type": "object",
+      "required": [
+        "body",
+        "id",
+        "post_id",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "post_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "body": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "CommentResponse": {
+      "type": "object",
+      "required": [
+        "body",
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "post_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "user": {
+          "$ref": "#/definitions/PostUser"
+        },
+        "body": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "5d7273cb40d82abd58b2a8ef"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2019-12-11T19:22:49.503Z"
+        }
+      }
+    },
+    "RegisterCommentRequest": {
+      "type": "object",
+      "required": [
+        "body",
+        "post_id"
+      ],
+      "properties": {
+        "post_id": {
+          "type": "string",
+          "example": "5d7273cb40d82abd58b2a8ef"
+        },
+        "body": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "example": [
+            8.2,
+            -12.5
+          ],
+          "items": {
+            "type": "number",
+            "example": -12.5
+          }
+        }
+      }
+    },
+    "GetCommentResponse": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "$ref": "#/definitions/CommentResponse"
+        }
+      }
+    },
+    "GetCommentsResponse": {
+      "type": "object",
+      "properties": {
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentResponse"
+          }
+        },
+        "total": {
+          "type": "number",
+          "format": "uint8"
+        }
+      }
+    },
+    "UpdateCommentRequest": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

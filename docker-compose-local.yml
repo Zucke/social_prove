@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  draid.db:
+    image: mongo:4.2.0
+    restart: always
+    ports:
+      - 27017:27017
+    container_name: draid-db
